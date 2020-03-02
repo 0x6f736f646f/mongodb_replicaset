@@ -1,81 +1,79 @@
 version: '3.0'
 services:
-  tut12-mongo-keys:
+  demo-mongo-keys:
     image: openssl
     build: openssl/.
     volumes:
-      - 'tut12-mongo-keys:/mongo-conf'
+      - 'demo-mongo-keys:/mongo-conf'
     command: bash -c "openssl rand -base64 741 > /mongo-conf/mongodb-keyfile; chmod 600 /mongo-conf/mongodb-keyfile; chown 999 /mongo-conf/mongodb-keyfile"
-  tut12-mongo-primary:
+  
+  demo-mongo-primary:
     image: 'mongo:latest'
     volumes:
-      - 'tut12-mongo-keys:/opt/keyfile'
-      - 'tut12-mongo-data-0:/data/db'
+      - 'demo-mongo-keys:/opt/keyfile'
+      - 'demo-mongo-data-0:/data/db'
     env_file: ./mongod.env
     ports:
       - '2717:27017'
-    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet tut12-replica-set
+    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet demo-replica-set
     depends_on:
-      - tut12-mongo-keys
+      - demo-mongo-keys
     networks:
-      tut12-replica-set: null
-  tut12-mongo-worker-1:
+      demo-replica-set:
+
+  demo-mongo-node-1:
     image: 'mongo:latest'
     volumes:
-      - 'tut12-mongo-keys:/opt/keyfile'
-      - 'tut12-mongo-data-1:/data/db'
+      - 'demo-mongo-keys:/opt/keyfile'
+      - 'demo-mongo-data-1:/data/db'
     env_file: ./mongod.env
     ports:
       - '27018:27017'
-    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet tut12-replica-set
+    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet demo-replica-set
     depends_on:
-      - tut12-mongo-keys
+      - demo-mongo-keys
     networks:
-      tut12-replica-set: null
-  tut12-mongo-worker-2:
+      demo-replica-set:
+
+  demo-mongo-node-2:
     image: 'mongo:latest'
     volumes:
-      - 'tut12-mongo-keys:/opt/keyfile'
-      - 'tut12-mongo-data-2:/data/db'
+      - 'demo-mongo-keys:/opt/keyfile'
+      - 'demo-mongo-data-2:/data/db'
     env_file: ./mongod.env
     ports:
       - '27019:27017'
-    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet tut12-replica-set
+    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet demo-replica-set
     depends_on:
-      - tut12-mongo-keys
+      - demo-mongo-keys
     networks:
-      tut12-replica-set: null
-  tut12-mongo-worker-3:
+      demo-replica-set:
+
+  demo-mongo-node-3:
     image: 'mongo:latest'
     volumes:
-      - 'tut12-mongo-keys:/opt/keyfile'
-      - 'tut12-mongo-data-3:/data/db'
+      - 'demo-mongo-keys:/opt/keyfile'
+      - 'demo-mongo-data-3:/data/db'
     env_file: ./mongod.env
     ports:
       - '27020:27017'
-    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet tut12-replica-set
+    command: mongod --auth --keyFile /opt/keyfile/mongodb-keyfile --replSet demo-replica-set
     depends_on:
-      - tut12-mongo-keys
+      - demo-mongo-keys
     networks:
-      tut12-replica-set: null
-  setup:
-    image: setup-rs
-    build: Setup/.
-    depends_on:
-      - tut12-mongo-primary
-      - tut12-mongo-worker-1
-      - tut12-mongo-worker-2
-      - tut12-mongo-worker-3
+      demo-replica-set:
+
 volumes:
-  tut12-mongo-keys: null
-  tut12-mongo-data-0: null
-  tut12-mongo-data-1: null
-  tut12-mongo-data-2: null
-  tut12-mongo-data-3: null
+  demo-mongo-keys: 
+  demo-mongo-data-0: 
+  demo-mongo-data-1: 
+  demo-mongo-data-2: 
+  demo-mongo-data-3: 
+
 networks:
-  tut12-replica-set:
+  demo-replica-set:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 172.10.8.0/24
+        - subnet: 172.10.99.0/24
