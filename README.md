@@ -189,7 +189,8 @@ rs.reconfig(conf);
 ```
 11. We will use the python script to push data to the database
     We finally run the bash file to push data
-
+12. Check the data base
+![picture alt]( /../src/image.png "Screenshot of database")
 
 ### Considerations
 This replica set consists of 3 nodes as you can see.However, if you decide to go with an even number say 4 members, deploy an arbiter so that the set has an odd number of voting members.Voting is usually conducted by cluster members to elect a primary node and so adding an arbiter ensures no ties are risen during voting.
